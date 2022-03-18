@@ -1,16 +1,11 @@
-# appwrite_authentication
+# Appwrite Authentication
 
-A new Flutter project.
+This project is made to showcase a simple manner to get up and running with Appwrite. It's using the UI from [Flutter Login Template](https://github.com/Robert-Brunhage-Organization/flutter_login_template).
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Fork and clone this project. This project has only made the changes required to work with Android but I recommend following [Appwrite Flutter docs](https://appwrite.io/docs/getting-started-for-flutter) to add support for more platforms.
 
-A few resources to get you started if this is your first Flutter project:
+After this is done and you have your backend running with appwrite, make sure to update the project id in `main.dart`.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This codebase was created for the following [video](https://youtu.be/2d6evFfOX5Q)
