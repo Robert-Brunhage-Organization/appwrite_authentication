@@ -1,19 +1,22 @@
+import 'package:appwrite/appwrite.dart';
+import 'package:appwrite_authentication/main.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../home/home_view.dart';
 import '../login/login_view.dart';
 import '../validation.dart';
 
-class RegisterView extends StatefulWidget {
+class RegisterView extends ConsumerStatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
   static const String routeName = '/register';
 
   @override
-  State<RegisterView> createState() => _RegisterViewState();
+  ConsumerState<RegisterView> createState() => _RegisterViewState();
 }
 
-class _RegisterViewState extends State<RegisterView> {
+class _RegisterViewState extends ConsumerState<RegisterView> {
   final _formKey = GlobalKey<FormState>();
   String? email;
   String? password;
@@ -66,15 +69,24 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 
-  void validateAndRegister() {
+  Future<void> validateAndRegister() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
       // Register logic here
-      Navigator.of(context).pushReplacementNamed(
-        HomeView.routeName,
-        arguments: HomeViewArguments(email: email!),
-      );
+      try {
+        await ref.read(appwriteAccountProvider).create(
+              userId: 'unique()',
+              email: email!,
+              password: password!,
+            );
+        Navigator.of(context).pushReplacementNamed(
+          HomeView.routeName,
+          arguments: HomeViewArguments(email: email!),
+        );
+      } on AppwriteException catch (e) {
+        debugPrint(e.message);
+      }
     }
   }
 

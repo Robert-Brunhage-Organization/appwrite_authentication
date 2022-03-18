@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       restorationScopeId: 'app',
-      onGenerateTitle: (context) => 'Login Template',
+      onGenerateTitle: (context) => 'Appwrite Authentication',
       theme: ThemeData(
         colorSchemeSeed: Colors.blue,
         useMaterial3: true,

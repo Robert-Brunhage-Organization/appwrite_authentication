@@ -1,22 +1,43 @@
+import 'package:appwrite/appwrite.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../main.dart';
 import '../../home/home_view.dart';
 import '../register/register_view.dart';
 import '../validation.dart';
 
-class LoginView extends StatefulWidget {
+class LoginView extends ConsumerStatefulWidget {
   const LoginView({Key? key}) : super(key: key);
   static const String routeName = '/login';
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  ConsumerState<LoginView> createState() => _LoginViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _LoginViewState extends ConsumerState<LoginView> {
   final _formKey = GlobalKey<FormState>();
   String? email;
   String? password;
+
+  @override
+  void initState() {
+    super.initState();
+    checkCurrentUser();
+  }
+
+  Future<void> checkCurrentUser() async {
+    try {
+      final user = await ref.read(appwriteAccountProvider).get();
+      Navigator.of(context).pushReplacementNamed(
+        HomeView.routeName,
+        arguments: HomeViewArguments(email: user.email),
+      );
+    } on AppwriteException catch (e) {
+      debugPrint(e.message);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,15 +90,22 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-  void validateAndLogin() {
+  void validateAndLogin() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-
-      // Login logic here
-      Navigator.of(context).pushReplacementNamed(
-        HomeView.routeName,
-        arguments: HomeViewArguments(email: email!),
-      );
+      try {
+        // Login logic here
+        await ref.read(appwriteAccountProvider).createSession(
+              email: email!,
+              password: password!,
+            );
+        Navigator.of(context).pushReplacementNamed(
+          HomeView.routeName,
+          arguments: HomeViewArguments(email: email!),
+        );
+      } on AppwriteException catch (e) {
+        debugPrint(e.message);
+      }
     }
   }
 
